@@ -1,0 +1,8 @@
+consumer:
+  token: xxxxx
+  secret: xxxxx
+
+access_token:
+  token: xxxxx
+  secret: xxxxx
+

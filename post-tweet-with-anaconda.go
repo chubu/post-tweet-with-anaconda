@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/ChimeraCoder/anaconda"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
@@ -57,8 +58,18 @@ func main() {
 	api := anaconda.NewTwitterApi(token.Access_token.Token, token.Access_token.Secret)
 
 	// post tweet
-	current := time.Now().Unix()
-	rand.Seed(current)
+	current := time.Now()
+	currentUnixtime := current.Unix()
+	rand.Seed(currentUnixtime)
 	num := rand.Intn(len(statuses.Data))
-	api.PostTweet("今の運勢: "+statuses.Data[num], nil)
+	timeString := fmt.Sprintf(
+		"%4d年%2d月%2d日 %2d:%2d の運勢: %s",
+		current.Year(),
+		current.Month(),
+		current.Day(),
+		current.Hour(),
+		current.Minute(),
+		statuses.Data[num],
+	)
+	api.PostTweet(timeString, nil)
 }

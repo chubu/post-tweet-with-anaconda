@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	TOKEN_YAML = "./yaml/token.yml"
-	DATA_YAML  = "./yaml/data.yml"
+	TOKEN_YAML = "/home/ec2-user/golang/yaml/token.yml"
+	DATA_YAML  = "/home/ec2-user/golang/yaml/data.yml"
 )
 
 type Token struct {

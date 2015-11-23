@@ -63,7 +63,7 @@ func main() {
 	rand.Seed(currentUnixtime)
 	num := rand.Intn(len(statuses.Data))
 	timeString := fmt.Sprintf(
-		"%4d年%2d月%2d日 %2d:%2d の運勢: %s",
+		"%4d年%02d月%02d日 %02d:%02d の運勢: %s",
 		current.Year(),
 		current.Month(),
 		current.Day(),

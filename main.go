@@ -27,37 +27,39 @@ type Statuses struct {
 	Data []string
 }
 
-func main() {
-	// read yaml
+func getToken() (Token, error) {
+	var token Token
 	filename, _ := filepath.Abs(TOKEN_YAML)
 	yml, err := ioutil.ReadFile(filename)
 	if err != nil {
-		panic(err)
+		return token, err
 	}
-	var token Token
+
 	err = yaml.Unmarshal(yml, &token)
 	if err != nil {
-		panic(err)
+		return token, err
 	}
 
-	// read statuses
-	filename, _ = filepath.Abs(DATA_YAML)
-	yml, err = ioutil.ReadFile(filename)
-	if err != nil {
-		panic(err)
-	}
+	return token, nil
+}
+
+func getStatuses() (Statuses, error) {
 	var statuses Statuses
+	filename, _ := filepath.Abs(DATA_YAML)
+	yml, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return statuses, err
+	}
+
 	err = yaml.Unmarshal(yml, &statuses)
 	if err != nil {
-		panic(err)
+		return statuses, err
 	}
 
-	// create api instance
-	anaconda.SetConsumerKey(token.Consumer.Token)
-	anaconda.SetConsumerSecret(token.Consumer.Secret)
-	api := anaconda.NewTwitterApi(token.Access_token.Token, token.Access_token.Secret)
+	return statuses, nil
+}
 
-	// post tweet
+func createStatus(statuses Statuses) string {
 	current := time.Now()
 	currentUnixtime := current.Unix()
 	rand.Seed(currentUnixtime)
@@ -71,5 +73,23 @@ func main() {
 		current.Minute(),
 		statuses.Data[num],
 	)
-	api.PostTweet(timeString, nil)
+
+	return timeString
+}
+
+func main() {
+	token, err := getToken()
+	if err != nil {
+		panic(err)
+	}
+
+	statuses, err := getStatuses()
+	if err != nil {
+		panic(err)
+	}
+
+	anaconda.SetConsumerKey(token.Consumer.Token)
+	anaconda.SetConsumerSecret(token.Consumer.Secret)
+	api := anaconda.NewTwitterApi(token.Access_token.Token, token.Access_token.Secret)
+	api.PostTweet(createStatus(statuses), nil)
 }
